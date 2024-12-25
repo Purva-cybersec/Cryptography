@@ -1,0 +1,91 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+public class MonteCarlo {
+
+    public static void main(String[] args) {
+        String inputFileName = "testInput.txt"; // Modify to your input file's name
+        Map<String, Double> bigrams = new HashMap<>();
+
+        int iterationLimit = 10000;
+        int iterationCount = 0;
+        double previousScore = -1;
+        double score = -1;
+
+        // Load bigram frequencies
+        try (BufferedReader bigramFile = new BufferedReader(new FileReader("bigrams.txt"))) {
+            String line;
+            while ((line = bigramFile.readLine()) != null) {
+                String[] parts = line.split(" ");
+                String bigram = parts[0];
+                double frequency = Double.parseDouble(parts[1]) * 1000;
+                bigrams.put(bigram, frequency);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String inputString = null;
+
+        // Read input string from the provided file
+        try (BufferedReader inputFile = new BufferedReader(new FileReader(inputFileName)) {
+            StringBuilder inputStringBuilder = new StringBuilder();
+            String line;
+            while ((line = inputFile.readLine()) != null) {
+                inputStringBuilder.append(line);
+            }
+            inputString = inputStringBuilder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        double prob;
+        double randomNumber;
+        int ind1, ind2;
+
+        // The keys represent the substitution mapping
+        char[] key = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        char[] previousKey = key.clone();
+
+        char char1, char2;
+
+        try {
+            Random random = new Random();
+            while (iterationCount < iterationLimit) {
+                // Rest of the code remains the same
+                // ...
+                // (No need to modify this part)
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    private static double calculateScore(Map<String, Double> bigrams, String text) {
+        double score = 0;
+        char previousChar = '\0';
+        for (char currentChar : text.toCharArray()) {
+            if (Character.isLetter(currentChar) || Character.isWhitespace(currentChar)) {
+                if (Character.isWhitespace(currentChar)) {
+                    currentChar = ' ';
+                }
+                String bigram = String.valueOf(previousChar) + currentChar;
+                if (bigrams.containsKey(bigram) && bigrams.get(bigram) != 0) {
+                    score += Math.log(bigrams.get(bigram));
+                }
+                previousChar = currentChar;
+            }
+        }
+        return score;
+    }
+}
